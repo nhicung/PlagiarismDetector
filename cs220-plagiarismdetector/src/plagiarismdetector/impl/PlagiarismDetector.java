@@ -44,6 +44,7 @@ public class PlagiarismDetector implements IPlagiarismDetector
      */
     @Override
     public Collection<String> getFilenames() {
+    	
         // TODO Auto-generated method stub
         return null;
     }
@@ -53,6 +54,7 @@ public class PlagiarismDetector implements IPlagiarismDetector
      */
     @Override
     public int getNumNGramsInCommon(String file1, String file2) {
+    	
         // TODO Auto-generated method stub
         return 0;
     }
