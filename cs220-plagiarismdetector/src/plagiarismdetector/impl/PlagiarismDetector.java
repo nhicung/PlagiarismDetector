@@ -4,15 +4,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import plagiarismdetector.IPlagiarismDetector;
 
 public class PlagiarismDetector implements IPlagiarismDetector
 {
+	private Set<String> filenames;
+	private int n;
+	Map<String, HashMap<String, Integer>> grid;
+	
     public PlagiarismDetector(int n) {
     	
-        // TODO Auto-generated constructor stub
+    	filenames = new HashSet<>();
+    	this.n = n;
+    	grid = new HashMap<String, HashMap<String, Integer>>();
+    	
     }
 
     /* (non-Javadoc)
@@ -21,8 +33,8 @@ public class PlagiarismDetector implements IPlagiarismDetector
     @Override
     public int getN() {
     	
-        // TODO Auto-generated method stub
-        return 0;
+        return n;
+        
     }
     
     /* (non-Javadoc)
@@ -33,10 +45,10 @@ public class PlagiarismDetector implements IPlagiarismDetector
     	
         for (File f : dir.listFiles()) {
             String fileName = f.getName();
+            filenames.add(fileName);
             Scanner scan = new Scanner(new FileInputStream(f));
-            // TODO process the file using the scanner and the fileName
-        }
-        
+            
+        }      
     }
 
     /* (non-Javadoc)
@@ -45,8 +57,8 @@ public class PlagiarismDetector implements IPlagiarismDetector
     @Override
     public Collection<String> getFilenames() {
     	
-        // TODO Auto-generated method stub
-        return null;
+    	return filenames;
+   
     }
 
     /* (non-Javadoc)
