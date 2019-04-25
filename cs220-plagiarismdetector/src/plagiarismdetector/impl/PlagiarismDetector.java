@@ -2,6 +2,7 @@ package plagiarismdetector.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,10 +66,46 @@ public class PlagiarismDetector implements IPlagiarismDetector
      * @see plagiarismdetector.IPlagiarismDetector#getNumNGramsInCommon(java.lang.String, java.lang.String)
      */
     @Override
-    public int getNumNGramsInCommon(String file1, String file2) {
+    public int getNumNGramsInCommon(String file1, String file2) throws IOException{
     	
-        // TODO Auto-generated method stub
-        return 0;
+    	Scanner scan1 = new Scanner(new FileInputStream(file1));
+    	Scanner scan2 = new Scanner(new FileInputStream(file2));
+    	
+        Set<String> set1 = new HashSet<String>();
+        Set<String> set2 = new HashSet<String>();
+        
+        String gram1 = "";
+        for (int i = 0; i< n-1; i++) {
+        	gram1 += scan1.next() + "";
+        }
+        gram1 = gram1.trim();
+        
+        while (scan1.hasNext()) {
+        	gram1 += "" + scan1.next();
+        	set1.add(gram1);
+        	gram1 = gram1.substring(gram1.indexOf(' ') + 1);
+        }
+        
+        String gram2 = "";
+        for (int j = 0; j< n-1; j++) {
+        	gram2 += scan2.next() + "";
+        }
+        gram2 = gram2.trim();
+        
+        while (scan2.hasNext()) {
+        	gram2 += "" + scan2.next();
+        	set2.add(gram2);
+        	gram2 = gram2.substring(gram2.indexOf(' ') + 1);
+        }
+        int count =0;
+        for (String s1 : set1) {
+        	for (String s2 : set2) {
+        		if (s1 == s2) {
+        			count ++;
+        		}
+        	}
+        }
+        return count;      
     }
 
     /* (non-Javadoc)

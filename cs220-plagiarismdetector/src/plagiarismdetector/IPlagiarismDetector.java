@@ -41,9 +41,10 @@ public interface IPlagiarismDetector
      * @param file1
      * @param file2
      * @return
+     * @throws IOException 
      */
     
-    int getNumNGramsInCommon(String file1, String file2);
+    int getNumNGramsInCommon(String file1, String file2) throws IOException;
     
     /**
      * Given the name of a file, return a collection of the unique n-grams in that file.
