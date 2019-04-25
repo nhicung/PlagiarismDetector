@@ -49,6 +49,7 @@ public class PlagiarismDetector implements IPlagiarismDetector
             filenames.add(fileName);
             Scanner scan = new Scanner(new FileInputStream(f));
             
+            
         }      
     }
 
