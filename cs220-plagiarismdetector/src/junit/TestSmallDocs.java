@@ -41,7 +41,7 @@ public class TestSmallDocs
                 }
                 int num12 = detector.getNumNGramsInCommon(f1, f2);
                 int num21 = detector.getNumNGramsInCommon(f2, f1);
-                System.out.printf("    assertEquals(%d, detector.getNumNGramsInCommon(\"%s\", \"%s\"));\n", num12, f1, f2);
+                System.out.printf("    assertEquals(%d, detectumNGramsInCommon(\"%s\", \"%s\"));\n", num12, f1, f2);
                 System.out.printf("    assertEquals(%d, detector.getNumNGramsInCommon(\"%s\", \"%s\"));\n", num21, f2, f1);
             }
         }
