@@ -16,16 +16,17 @@ import plagiarismdetector.IPlagiarismDetector;
 
 public class PlagiarismDetector implements IPlagiarismDetector
 {
-	private Set<String> filenames;
+	//private Set<String> filenames;
 	private int n;
 	Map<String, HashMap<String, Integer>> grid;
+	private Map<String, HashSet<String>> files;
 	
     public PlagiarismDetector(int n) {
     	
-    	filenames = new HashSet<>();
+    	//filenames = new HashSet<>();
     	this.n = n;
     	grid = new HashMap<String, HashMap<String, Integer>>();
-    	
+    	files = new HashMap<String, HashSet<String>>();
     }
 
     /* (non-Javadoc)
@@ -46,10 +47,21 @@ public class PlagiarismDetector implements IPlagiarismDetector
     	
         for (File f : dir.listFiles()) {
             String fileName = f.getName();
-            filenames.add(fileName);
+            files.put(fileName, new HashSet<String>());
             Scanner scan = new Scanner(new FileInputStream(f));
             
+            String gram = "";
+            for ( int i =0; i < n-1; i++) {
+            	gram += scan.next() + " ";
+            }
             
+            gram = gram.trim();
+            
+            while (scan.hasNext()) {
+            	gram += " " + scan.next();
+            	files.get(fileName).add(gram);
+            	gram = gram.substring(gram.indexOf(' ') + 1);
+            }
         }      
     }
 
@@ -59,7 +71,7 @@ public class PlagiarismDetector implements IPlagiarismDetector
     @Override
     public Collection<String> getFilenames() {
     	
-    	return filenames;
+    	return files.keySet();
    
     }
 
@@ -67,45 +79,24 @@ public class PlagiarismDetector implements IPlagiarismDetector
      * @see plagiarismdetector.IPlagiarismDetector#getNumNGramsInCommon(java.lang.String, java.lang.String)
      */
     @Override
-    public int getNumNGramsInCommon(String file1, String file2) throws IOException{
-    	
-    	Scanner scan1 = new Scanner(new FileInputStream(file1));
-    	Scanner scan2 = new Scanner(new FileInputStream(file2));
-    	
-        Set<String> set1 = new HashSet<String>();
-        Set<String> set2 = new HashSet<String>();
+    public int getNumNGramsInCommon(String file1, String file2){
+   	
+        Set<String> set1 = files.get(file1);
+        Set<String> set2 = files.get(file2);
         
-        String gram1 = "";
-        for (int i = 0; i< n-1; i++) {
-        	gram1 += scan1.next() + "";
-        }
-        gram1 = gram1.trim();
-        
-        while (scan1.hasNext()) {
-        	gram1 += "" + scan1.next();
-        	set1.add(gram1);
-        	gram1 = gram1.substring(gram1.indexOf(' ') + 1);
-        }
-        
-        String gram2 = "";
-        for (int j = 0; j< n-1; j++) {
-        	gram2 += scan2.next() + "";
-        }
-        gram2 = gram2.trim();
-        
-        while (scan2.hasNext()) {
-        	gram2 += "" + scan2.next();
-        	set2.add(gram2);
-        	gram2 = gram2.substring(gram2.indexOf(' ') + 1);
-        }
         int count =0;
         for (String s1 : set1) {
         	for (String s2 : set2) {
-        		if (s1 == s2) {
+        		if (s1.equals(s2)) {
         			count ++;
         		}
         	}
+        	System.out.println(s1);
         }
+        
+        grid.get(file1).put(file2, count);
+        grid.get(file2).put(file1, count);
+        
         return count;      
     }
 
@@ -114,8 +105,9 @@ public class PlagiarismDetector implements IPlagiarismDetector
      */
     @Override
     public Collection<String> getNgramsInFile(String filename) {
-        // TODO Auto-generated method stub
-        return null;
+    	
+        return files.get(filename);
+        
     }
 
     /* (non-Javadoc)
@@ -123,8 +115,8 @@ public class PlagiarismDetector implements IPlagiarismDetector
      */
     @Override
     public int getNumNgramsInFile(String filename) {
-        // TODO Auto-generated method stub
-        return 0;
+        
+    	return files.get(filename).size();
     }
 
     /* (non-Javadoc)
