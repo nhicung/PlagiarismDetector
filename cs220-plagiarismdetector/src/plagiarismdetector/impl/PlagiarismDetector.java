@@ -90,11 +90,12 @@ public class PlagiarismDetector implements IPlagiarismDetector {
 	 */
 	@Override
 	public int getNumNGramsInCommon(String file1, String file2) {
-
+		// create two sets of string to store in the n-grams from each file
 		Set<String> set1 = files.get(file1);
 		Set<String> set2 = files.get(file2);
 
 		int count = 0;
+		// scan each set to see if there is any common n-grams (string) and count them
 		for (String s1 : set1) {
 			for (String s2 : set2) {
 				if (s1.equals(s2)) {
@@ -102,6 +103,8 @@ public class PlagiarismDetector implements IPlagiarismDetector {
 				}
 			}
 		}
+		// Check if grid already has file1 and file2. If not, add them in.
+
 		if (!grid.containsKey(file1)) {
 			grid.put(file1, new HashMap<String, Integer>());
 
@@ -110,6 +113,7 @@ public class PlagiarismDetector implements IPlagiarismDetector {
 			grid.put(file2, new HashMap<String, Integer>());
 		}
 
+		// set up the information and put into grid (for next method)
 		grid.get(file1).put(file2, count);
 		grid.get(file2).put(file1, count);
 		return count;
@@ -148,17 +152,64 @@ public class PlagiarismDetector implements IPlagiarismDetector {
 	public Collection<String> getSuspiciousPairs(int minNgrams) {
 
 		Set<String> pair = new HashSet<String>();
+		// this set is to add all of the f1 after it is compared to f2
+		Set<String> checkContain = new HashSet<String>();
 
 		for (String f1 : files.keySet()) {
 			for (String f2 : files.keySet()) {
+
+				// check if this file has already in the check checkContain set
+				// if it is, continue and don't need to scan again
+				if (checkContain.contains(f2)) {
+					continue;
+				}
+				// check if the two files are the same
+				// if they are, continue and don't need to compare them
+				if (f1.equals(f2)) {
+					continue;
+				}
+
+				// if not duplicated and not the same files, call function getNumNGramsInCommon
+				// to set them up into grid
 				this.getNumNGramsInCommon(f1, f2);
+
+				// compare the common number of n-grams to minNGrams
+				// if equals or more than that, add to set pair
+
 				if (grid.get(f1).get(f2) >= minNgrams) {
-					String s = f1 + " " + f2 + " " + grid.get(f1).get(f2);
+					String s;
+					int order = f1.compareTo(f2);
+					if (order < 0) {
+						s = f1 + " " + f2 + " " + grid.get(f1).get(f2);
+					}
+
+					else {
+						s = f2 + " " + f1 + " " + grid.get(f1).get(f2);
+					}
 					pair.add(s);
+
+				}
+			}
+			checkContain.add(f1);
+		}
+		return pair;
+	}
+	
+	public Collection<String> getNGramsInCommon(String file1, String file2) {
+		// create two sets of string to store in the n-grams from each file
+		Set<String> set1 = files.get(file1);
+		Set<String> set2 = files.get(file2);
+		Set<String> commonNGram = new HashSet<String>();
+
+		// scan each set to see if there is any common n-grams (string) and print them
+		for (String s1 : set1) {
+			for (String s2 : set2) {
+				if (s1.equals(s2)) {
+					commonNGram.add(s1);
 				}
 			}
 		}
-		return pair;
+		return commonNGram;
 	}
 
 }

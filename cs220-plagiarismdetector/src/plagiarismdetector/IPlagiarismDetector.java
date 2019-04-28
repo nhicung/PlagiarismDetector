@@ -115,5 +115,7 @@ public interface IPlagiarismDetector
      * @return
      */
     Collection<String> getSuspiciousPairs(int minNgrams);
+    
+    Collection<String> getNGramsInCommon(String file1, String file2);
 
 }
