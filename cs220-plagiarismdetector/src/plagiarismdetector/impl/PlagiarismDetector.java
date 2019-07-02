@@ -57,7 +57,6 @@ public class PlagiarismDetector implements IPlagiarismDetector {
 			String gram = "";
 			for (int i = 0; i < n - 1; i++) {
 				gram += scan.next() + " ";
-			
 			}
 
 			gram = gram.trim();
